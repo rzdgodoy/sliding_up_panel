@@ -54,6 +54,12 @@ class SlidingUpPanel extends StatefulWidget {
   /// to fill the screen.
   final Widget body;
 
+  /// The height of the body.
+  final double bodyHeight;
+
+  /// The width of the body.
+  final double bodyWidth;
+
   /// The height of the sliding panel when fully collapsed.
   final double minHeight;
 
@@ -161,6 +167,8 @@ class SlidingUpPanel extends StatefulWidget {
     this.panel,
     this.panelBuilder,
     this.body,
+    this.bodyHeight,
+    this.bodyWidth,
     this.collapsed,
     this.alwaysShowCollapsedWidget,
     this.minHeight = 100.0,
@@ -255,8 +263,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
             );
           },
           child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+            height: widget.bodyHeight ?? MediaQuery.of(context).size.height,
+            width: widget.bodyWidth ?? MediaQuery.of(context).size.width,
             child: widget.body,
           ),
         ) : Container(),
