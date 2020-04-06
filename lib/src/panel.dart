@@ -44,6 +44,11 @@ class SlidingUpPanel extends StatefulWidget {
   /// This fades out as the panel is opened.
   final Widget collapsed;
 
+  /// Keep the Widget displayed overtop/below the [panel] even when not collapsed.
+  /// Does not fade the panel out when fully opened.
+  /// Defaults to false
+  final bool alwaysShowCollapsedWidget;
+
   /// The Widget that lies underneath the sliding panel.
   /// This Widget automatically sizes itself
   /// to fill the screen.
@@ -157,6 +162,7 @@ class SlidingUpPanel extends StatefulWidget {
     this.panelBuilder,
     this.body,
     this.collapsed,
+    this.alwaysShowCollapsedWidget,
     this.minHeight = 100.0,
     this.maxHeight = 500.0,
     this.snapPoint,
@@ -304,8 +310,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
 
                 //open panel
                 Positioned(
-                  top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
-                  bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
+                  top: widget.slideDirection == SlideDirection.UP ? widget.alwaysShowCollapsedWidget ? 0.0 - widget.minHeight : 0 : null,
+                  bottom: widget.slideDirection == SlideDirection.DOWN ? widget.alwaysShowCollapsedWidget ? 0.0 + widget.minHeight : 0 : null,
                   width:  MediaQuery.of(context).size.width -
                           (widget.margin != null ? widget.margin.horizontal : 0) -
                           (widget.padding != null ? widget.padding.horizontal : 0),
@@ -326,7 +332,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                           (widget.padding != null ? widget.padding.horizontal : 0),
                   child: Container(
                     height: widget.minHeight,
-                    child: widget.collapsed == null ? Container() : FadeTransition(
+                    // child: widget.collapsed ??  Container()
+                    child: widget.collapsed == null ? Container() : widget.alwaysShowCollapsedWidget ? widget.collapsed : FadeTransition(
                       opacity: Tween(begin: 1.0, end: 0.0).animate(_ac),
 
                       // if the panel is open ignore pointers (touch events) on the collapsed
